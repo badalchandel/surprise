@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🤍</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #ebebeb;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      position: relative;
+    }
+
+    .heart-button {
+      border: none;
+      display: flex;
+      margin: auto;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      outline: none;
+      position: relative; /* Required for the glow effect */
+    }
+
+    .heart-icon {
+      width: 40px; /* Adjusted size of heart */
+      height: 40px; /* Adjusted size of heart */
+      fill: black;
+      transition: transform 0.4s ease;
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease; /* Smooth transition for opacity */
+    }
+
+    .message {
+      font-size: 24px;
+      color: #333;
+      margin-top: 20px;
+      text-align: center;
+      opacity: 0; /* Start as hidden */
+      transition: opacity 0.5s ease; /* Smooth fade-in transition */
+      white-space: nowrap; /* Prevent wrapping */
+      overflow: hidden; /* Hide overflow */
+      width: 0; /* Start with width 0 for animation */
+    }
+
+    .show {
+      opacity: 1; /* Class to show message */
+      width: auto; /* Set to auto to show full width */
+    }
+
+    #confettiCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: block; /* Show canvas */
+    }
+
+    .glow-on-hover {
+      width: 220px;
+      height: 50px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      z-index: 0;
+      border-radius: 10px;
+      transition: color 0.3s ease;
+    }
+
+    .glow-on-hover:before {
+      content: '';
+      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      background-size: 400%;
+      z-index: -1;
+      filter: blur(5px);
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      animation: glowing 20s linear infinite;
+      opacity: 0;
+      transition: opacity .3s ease-in-out;
+      border-radius: 10px;
+    }
+
+    .glow-on-hover:hover:before {
+      opacity: 1;
+    }
+
+    @keyframes glowing {
+      0% {
+        background-position: 0 0;
+      }
+      50% {
+        background-position: 400% 0;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button id="heartButton" class="heart-button glow-on-hover">
+      <svg viewBox="0 0 24 24" class="heart-icon">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+      </svg>
+    </button>
+    <div id="message" class="message hidden"></div>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <script>
+    const button = document.getElementById('heartButton');
+    const message = document.getElementById('message');
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+
+    const messages = [
+      "Congratulation✨",
+      "Happy Birthday!",
+      "",
+      "Tuhada din, tuhada naam,",
+      "Te tuhadi zindagi sab ton vadiya!",
+      "🎉🎂💙",
+      "🍕🍬🍻"
+    ];
+    
+    let currentMessageIndex = 0;
+    let currentCharIndex = 0;
+    let typingInterval;
+
+    let confettiParticles = [];
+
+    // Initialize confetti on load
+    startConfetti();
+
+    button.addEventListener('click', () => {
+      // Clear any previous typing
+      clearInterval(typingInterval);
+      currentMessageIndex = 0;
+      currentCharIndex = 0;
+      message.innerHTML = ''; // Clear previous message
+      message.classList.remove('hidden');
+      message.classList.add('show'); // Add show class to trigger opacity transition
+
+      // Start typing animation
+      typingInterval = setInterval(() => {
+        if (currentMessageIndex < messages.length) {
+          const currentMessage = messages[currentMessageIndex];
+          if (currentCharIndex < currentMessage.length) {
+            message.innerHTML += currentMessage.charAt(currentCharIndex);
+            currentCharIndex++;
+          } else {
+            message.innerHTML += '<br>'; // Add line break after each message
+            currentMessageIndex++;
+            currentCharIndex = 0; // Reset character index for the next message
+          }
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 100); // Adjust the typing speed here (in milliseconds)
+    });
+
+    // Confetti particle creation
+    function startConfetti() {
+      createConfettiParticles();
+      requestAnimationFrame(updateConfetti);
+    }
+
+    function createConfettiParticles() {
+      for (let i = 0; i < 100; i++) {
+        confettiParticles.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * confettiCanvas.height,
+          dx: Math.random() * 5 - 2.5,
+          dy: Math.random() * 5 + 1,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          size: Math.random() * 5 + 2
+        });
+      }
+    }
+
+    function updateConfetti() {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+      confettiParticles.forEach(particle => {
+        confettiCtx.fillStyle = particle.color;
+        confettiCtx.fillRect(particle.x, particle.y, particle.size, particle.size);
+        particle.x += particle.dx;
+        particle.y += particle.dy;
+
+        // Reset particle if it goes off screen
+        if (particle.y > confettiCanvas.height) {
+          particle.y = 0;
+          particle.x = Math.random() * confettiCanvas.width;
+        }
+      });
+
+      requestAnimationFrame(updateConfetti);
+    }
+
+    // Resize confetti canvas on window resize
+    window.addEventListener('resize', () => {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+      createConfettiParticles(); // Regenerate particles on resize
+    });
+
+    // Initialize canvas size
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+  </script>
+</body>
+</html>
