@@ -17,7 +17,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #ebebeb;
+      background-color: white;
       font-family: 'Arial', sans-serif;
     }
 
@@ -32,22 +32,21 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      transition: transform 0.2s ease;
       outline: none;
+      background: none;
       position: relative; /* Required for the glow effect */
     }
 
     .heart-icon {
-      width: 40px; /* Adjusted size of heart */
-      height: 40px; /* Adjusted size of heart */
-      fill: black;
-      transition: transform 0.4s ease;
+      width: 50px; /* Adjusted size of heart */
+      height: 50px; /* Adjusted size of heart */
+      fill: crimson;
     }
 
     .hidden {
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.5s ease; /* Smooth transition for opacity */
+      transition: opacity 1s ease; /* Smooth transition for opacity */
     }
 
     .message {
@@ -77,7 +76,7 @@
       display: block; /* Show canvas */
     }
 
-    .glow-on-hover {
+    /* .glow-on-hover {
       width: 220px;
       height: 50px;
       border: none;
@@ -120,12 +119,12 @@
       100% {
         background-position: 0 0;
       }
-    }
+    } */
   </style>
 </head>
 <body>
   <div class="container">
-    <button id="heartButton" class="heart-button glow-on-hover">
+    <button id="heartButton" class="heart-button">
       <svg viewBox="0 0 24 24" class="heart-icon">
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
       </svg>
@@ -142,13 +141,11 @@
     const confettiCtx = confettiCanvas.getContext('2d');
 
     const messages = [
-      "Congratulation✨",
-      "Happy Birthday!",
-      "",
-      "Tuhada din, tuhada naam,",
-      "Te tuhadi zindagi sab ton vadiya!",
-      "🎉🎂💙",
-      "🍕🍬🍻"
+      "Congratulation🎉",
+      "Happy Birthday🔥",
+      "🎂",
+      "🍕🍬🍻",
+      ""
     ];
     
     let currentMessageIndex = 0;
@@ -158,10 +155,11 @@
     let confettiParticles = [];
 
     // Initialize confetti on load
-    startConfetti();
+    
 
     button.addEventListener('click', () => {
       // Clear any previous typing
+      startConfetti();
       clearInterval(typingInterval);
       currentMessageIndex = 0;
       currentCharIndex = 0;
